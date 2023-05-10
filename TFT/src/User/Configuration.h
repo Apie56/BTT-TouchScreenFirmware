@@ -438,7 +438,7 @@
  *   Unit: [temperature in °C]
  *   Value range: [min: 20, max: 1000]
  */
-#define MIN_TEMP 180  // Default: 180
+#define MIN_TEMP 170  // Default: 180
 
 /**
  * Fan Maximum PWM Speed
@@ -463,9 +463,9 @@
 #define X_MIN_POS   0  // Default: 0
 #define Y_MIN_POS   0  // Default: 0
 #define Z_MIN_POS   0  // Default: 0
-#define X_MAX_POS 235  // Default: 235
-#define Y_MAX_POS 235  // Default: 235
-#define Z_MAX_POS 250  // Default: 250
+#define X_MAX_POS 350  // Default: 235
+#define Y_MAX_POS 345  // Default: 235
+#define Z_MAX_POS 410  // Default: 250
 
 /**
  * X & Y Move Speeds/Feedrates
