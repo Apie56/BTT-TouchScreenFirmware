@@ -485,7 +485,7 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define SPEED_Z_SLOW   500   // Default: 500
+#define SPEED_Z_SLOW   600   // Default: 500
 #define SPEED_Z_NORMAL 1000  // Default: 1000
 #define SPEED_Z_FAST   2000  // Default: 2000
 
@@ -496,7 +496,7 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define EXTRUDE_SLOW_SPEED     60  // Default: 60
+#define EXTRUDE_SLOW_SPEED     75  // Default: 60
 #define EXTRUDE_NORMAL_SPEED  600  // Default: 600
 #define EXTRUDE_FAST_SPEED   1200  // Default: 1200
 
