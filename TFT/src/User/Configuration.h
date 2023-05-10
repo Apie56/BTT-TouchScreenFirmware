@@ -197,7 +197,7 @@
  * If disabled, any filename extension starting with ".g" or ".G" (e.g. ".g", ".gco", ".gcode" etc.) will be hidden.
  *   Options: [disable: 0, enable: 1]
  */
-#define FILENAME_EXTENSION 1  // Default: 1
+#define FILENAME_EXTENSION 0  // Default: 1
 
 /**
  * Fan Speed In Percentage
