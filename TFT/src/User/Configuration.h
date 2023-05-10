@@ -587,14 +587,14 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define NOZZLE_PAUSE_RETRACT_LENGTH               15.0f  // (mm) (Default: 15.0f)
-#define NOZZLE_RESUME_PURGE_LENGTH                16.0f  // (mm) (Default: 16.0f)
+#define NOZZLE_PAUSE_RETRACT_LENGTH               0.0f  // (mm) (Default: 15.0f)
+#define NOZZLE_RESUME_PURGE_LENGTH                0.0f  // (mm) (Default: 16.0f)
 #define NOZZLE_PAUSE_X_POSITION     (X_MIN_POS + 10.0f)  // (mm) (Default: 10.0f)
-#define NOZZLE_PAUSE_Y_POSITION     (Y_MIN_POS + 10.0f)  // (mm) (Default: 10.0f)
-#define NOZZLE_PAUSE_Z_RAISE                      10.0f  // (mm) (Default: 10.0f)
-#define NOZZLE_PAUSE_XY_FEEDRATE                   6000  // (mm/min) X and Y axes feedrate (Default: 6000)
-#define NOZZLE_PAUSE_Z_FEEDRATE                    6000  // (mm/min) Z axis feedrate (Default: 6000)
-#define NOZZLE_PAUSE_E_FEEDRATE                     600  // (mm/min) retract & purge feedrate (Default: 600)
+#define NOZZLE_PAUSE_Y_POSITION     (Y_MAX_POS - 10.0f)  // (mm) (Default: 10.0f)
+#define NOZZLE_PAUSE_Z_RAISE                      2.0f  // (mm) (Default: 10.0f)
+#define NOZZLE_PAUSE_XY_FEEDRATE                   100  // (mm/min) X and Y axes feedrate (Default: 6000)
+#define NOZZLE_PAUSE_Z_FEEDRATE                    5  // (mm/min) Z axis feedrate (Default: 6000)
+#define NOZZLE_PAUSE_E_FEEDRATE                     0  // (mm/min) retract & purge feedrate (Default: 600)
 
 /**
  * Leveling Settings
