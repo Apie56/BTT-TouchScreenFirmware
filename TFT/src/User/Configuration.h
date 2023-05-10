@@ -867,7 +867,7 @@
  *
  *   Options: [disable: 0, enable: 1]
  */
-#define TOUCH_SOUND  1  // Default: 1
+#define TOUCH_SOUND  0  // Default: 1
 #define TOAST_SOUND  1  // Default: 1
 #define ALERT_SOUND  1  // Default: 1
 #define HEATER_SOUND 1  // Default: 1
@@ -886,7 +886,7 @@
  * period of the LCD idle time.
  *   Options: [OFF: 0, 5sec: 1, 10sec: 2, 30sec: 3, 1min: 4, 2min: 5, 5min: 6, 10min: 7]
  */
-#define LCD_IDLE_TIME 0  // Default: 0
+#define LCD_IDLE_TIME 3  // Default: 0
 
 // Custom value in seconds. This will be used if LCD_IDLE_TIME is set to 7 (CUSTOM Seconds)
 #define IDLE_TIME_CUSTOM (10 * 60)  // Default: 10 * 60
