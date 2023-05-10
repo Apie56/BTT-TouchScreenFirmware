@@ -474,9 +474,9 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define SPEED_XY_SLOW   1000  // Default: 1000
-#define SPEED_XY_NORMAL 3000  // Default: 3000
-#define SPEED_XY_FAST   5000  // Default: 5000
+#define SPEED_XY_SLOW   500  // Default: 1000
+#define SPEED_XY_NORMAL 750  // Default: 3000
+#define SPEED_XY_FAST   1000  // Default: 5000
 
 /**
  * Z Speeds/Feedrates
