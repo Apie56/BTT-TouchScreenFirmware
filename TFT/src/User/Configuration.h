@@ -591,7 +591,7 @@
 #define NOZZLE_RESUME_PURGE_LENGTH                0.0f  // (mm) (Default: 16.0f)
 #define NOZZLE_PAUSE_X_POSITION     (X_MIN_POS + 10.0f)  // (mm) (Default: 10.0f)
 #define NOZZLE_PAUSE_Y_POSITION     (Y_MAX_POS - 10.0f)  // (mm) (Default: 10.0f)
-#define NOZZLE_PAUSE_Z_RAISE                      2.0f  // (mm) (Default: 10.0f)
+#define NOZZLE_PAUSE_Z_RAISE                      10.0f  // (mm) (Default: 10.0f)
 #define NOZZLE_PAUSE_XY_FEEDRATE                   100  // (mm/min) X and Y axes feedrate (Default: 6000)
 #define NOZZLE_PAUSE_Z_FEEDRATE                    5  // (mm/min) Z axis feedrate (Default: 6000)
 #define NOZZLE_PAUSE_E_FEEDRATE                     0  // (mm/min) retract & purge feedrate (Default: 600)
@@ -629,8 +629,8 @@
 #define LEVELING_EDGE_DISTANCE    20  // (mm) Inset distance from bed's edge for calculating leveling point location (Default: 20)
 #define LEVELING_Z_POS          0.2f  // (mm) Z-axis position when nozzle stays for leveling (Default: 0.2f)
 #define LEVELING_Z_RAISE       10.0f  // (mm) Z-axis position when nozzle move to next point (Default: 10.0f)
-#define LEVELING_XY_FEEDRATE    6000  // (mm/min) X and Y axes move feedrate (Default: 6000)
-#define LEVELING_Z_FEEDRATE     6000  // (mm/min) Z axis move feedrate (Default: 6000)
+#define LEVELING_XY_FEEDRATE    12000  // (mm/min) X and Y axes move feedrate (Default: 6000)
+#define LEVELING_Z_FEEDRATE     720  // (mm/min) Z axis move feedrate (Default: 6000)
 
 /**
  * Inverted Axes (Manual Leveling, Leveling Corner, Move, Probe Offset)
