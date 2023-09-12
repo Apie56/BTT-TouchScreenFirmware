@@ -1304,7 +1304,7 @@ void parseACK(void)
       // newer Marlin (e.g. 2.0.9.3) returns this ACK for M900 command
       else if (ack_continue_seen("Advance K="))
       {
-        setParameter(P_LIN_ADV, heatGetCurrentTool(), ack_value());
+        setParameter(P_LIN_ADV, heatGetToolIndex(), ack_value());
       }
       else if (!processKnownEcho())  // if no known echo was found and processed, then popup the echo message
       {
@@ -1329,6 +1329,26 @@ void parseACK(void)
         setParameter(P_FILAMENT_DIAMETER, 1, ack_value());
         // filament_diameter > 0.01 to enable volumetric extrusion. Otherwise (<= 0.01), disable volumetric extrusion
         setParameter(P_FILAMENT_DIAMETER, 0, getParameter(P_FILAMENT_DIAMETER, 1) > 0.01f ? 1 : 0);
+      }
+    }
+    // check for motherboard reset (external, software, etc)
+    else if (ack_seen("Reset"))
+    {
+      if (ack_seen("External") || ack_seen("Software") || ack_seen("Watchdog") || ack_seen("Brown out"))
+      {
+        /*
+         * Proceed to reset the command queue, host status, fan speeds and load default machine settings.
+         * These functions will also trigger the query of temperatures which together with the resets
+         * done will also trigger the query of the motherboard capabilities and settings. It is necessary
+         * to do so because after the motherboard reset things might have changed (ex. FW update by M997).
+         */
+
+        clearCmdQueue();
+        memset(&infoHost, 0, sizeof(infoHost));
+        initMachineSettings();
+        fanResetSpeed();
+        coordinateSetKnown(false);
+        setReminderMsg(LABEL_UNCONNECTED, SYS_STATUS_DISCONNECTED);  // set the no printer attached reminder
       }
     }
 
