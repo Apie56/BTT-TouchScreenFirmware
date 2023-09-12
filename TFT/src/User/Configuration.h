@@ -143,7 +143,7 @@
 #define STATUS_FONT_COLOR       5  // Status (e.g. volume reminder, ABL probing point etc.) font color, such as: "Card inserted", "Card removed" (Default: 5)
 #define STATUS_XYZ_BG_COLOR    15  // Background color for X Y Z position display in Status Screen menu (Default: 15)
 #define LIST_BORDER_COLOR      15  // List View border color (Default: 15)
-#define LIST_BUTTON_BG_COLOR   15  // List View button background color (Default: 15)
+#define LIST_BUTTON_BG_COLOR   14  // List View button background color (Default: 15)
 
 // Mesh Leveling Display Colors (Mesh Editor)
 // Set the colors used for drawing the mesh with the minimum and maximum value in the grid.
@@ -182,7 +182,7 @@
  *
  *   Options: [Date Newest First: 0, Date Oldest First: 1, Name Ascending: 2, Name Descending: 3]
  */
-#define FILES_SORT_BY 0  // Default: 0
+#define FILES_SORT_BY 1  // Default: 0
 
 /**
  * Files List Mode
@@ -268,7 +268,7 @@
  *
  *   Options: [Percentage & Elapsed time: 0, Percentage & Remaining time: 1, Elapsed time & Remaining time: 2]
  */
-#define PROG_DISP_TYPE 2  // Default: 2
+#define PROG_DISP_TYPE 1  // Default: 2
 
 /**
  * Current Layer Display Mode During Print
@@ -587,8 +587,8 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define NOZZLE_PAUSE_RETRACT_LENGTH               15.0f  // (mm) (Default: 15.0f)
-#define NOZZLE_RESUME_PURGE_LENGTH                16.0f  // (mm) (Default: 16.0f)
+#define NOZZLE_PAUSE_RETRACT_LENGTH               1.0f  // (mm) (Default: 15.0f)
+#define NOZZLE_RESUME_PURGE_LENGTH                5.0f  // (mm) (Default: 16.0f)
 #define NOZZLE_PAUSE_X_POSITION     (X_MIN_POS + 10.0f)  // (mm) (Default: 10.0f)
 #define NOZZLE_PAUSE_Y_POSITION     (Y_MIN_POS + 10.0f)  // (mm) (Default: 10.0f)
 #define NOZZLE_PAUSE_Z_RAISE                      10.0f  // (mm) (Default: 10.0f)
@@ -711,9 +711,9 @@
  *                hotend temp: [min: 20, max: 1000]
  *                bed temp:    [min: 20, max: 400]
  */
-#define PREHEAT_LABELS {"PLA", "PETG", "ABS", "WOOD", "TPU", "NYLON"}  // Default: {"PLA", "PETG", "ABS", "WOOD", "TPU", "NYLON"}
-#define PREHEAT_HOTEND {200,   240,    230,   170,    220,   250}      // Default: {200,   240,    230,   170,    220,   250}
-#define PREHEAT_BED    { 60,    70,     90,    50,     50,    90}      // Default: { 60,    70,     90,    50,     50,    90}
+#define PREHEAT_LABELS {"PLA", "PETG", "ABS", "TPU", "NYLON", "COMP"}  // Default: {"PLA", "PETG", "ABS", "WOOD", "TPU", "NYLON"}
+#define PREHEAT_HOTEND {190,   230,    230,   210,    250,   250}      // Default: {200,   240,    230,   170,    220,   250}
+#define PREHEAT_BED    { 60,    70,     110,    60,     80,    40}      // Default: { 60,    70,     90,    50,     50,    90}
 
 //================================================================================
 //============================ Power Supply Settings =============================
@@ -936,7 +936,7 @@
  * Knob LED color at startup.
  *   Options: [OFF: 0, WHITE: 1, RED: 2, ORANGE: 3, YELLOW: 4, GREEN: 5, BLUE: 6, INDIGO: 7, VIOLET: 8]
  */
-#define KNOB_LED_COLOR 1  // Default: 1
+#define KNOB_LED_COLOR 2  // Default: 1
 
 // Keep the LED state in Marlin Mode
 #define KEEP_KNOB_LED_COLOR_MARLIN_MODE  // Default: uncommented (enabled)
@@ -1379,7 +1379,7 @@
  * The color of the progress bar during print.
  *   Options: [Orange: 0, Yellow: 1, Red: 2, Green: 3, Blue: 4, Cyan: 5, Magenta: 6, Purple: 7, Lime: 8, Gray: 9]
  */
-#define PROGRESS_BAR_COLOR 0  // Default: 0
+#define PROGRESS_BAR_COLOR 2  // Default: 0
 
 /**
  * Progress Bar Layout (Printing menu)
