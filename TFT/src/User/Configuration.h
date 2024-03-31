@@ -220,7 +220,7 @@
 #define STATUS_FONT_COLOR       5  // Status (e.g. volume reminder, ABL probing point etc.) font color, such as: "Card inserted", "Card removed" (Default: 5)
 #define STATUS_XYZ_BG_COLOR    15  // Background color for X Y Z position display in Status Screen menu (Default: 15)
 #define LIST_BORDER_COLOR      15  // List View border color (Default: 15)
-#define LIST_BUTTON_BG_COLOR   15  // List View button background color (Default: 15) (3VD)
+#define LIST_BUTTON_BG_COLOR   14  // List View button background color (Default: 15) (3VD)
 
 // Mesh Leveling Display Colors (Mesh Editor)
 // Set the colors used for drawing the mesh with the minimum and maximum value in the grid.
@@ -259,7 +259,7 @@
  *
  *   Options: [Date Newest First: 0, Date Oldest First: 1, Name Ascending: 2, Name Descending: 3]
  */
-#define FILES_SORT_BY 0  // Default: 0
+#define FILES_SORT_BY 0  // Default: 0 (3VD)
 
 /**
  * Files List Mode
@@ -274,7 +274,7 @@
  * If disabled, any filename extension starting with ".g" or ".G" (e.g. ".g", ".gco", ".gcode" etc.) will be hidden.
  *   Options: [disable: 0, enable: 1]
  */
-#define FILENAME_EXTENSION 0  // Default: 1
+#define FILENAME_EXTENSION 0  // Default: 1 (3VD)
 
 /**
  * Fan Speed In Percentage
@@ -664,13 +664,13 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define NOZZLE_PAUSE_RETRACT_LENGTH               0.0f  // (mm) (Default: 15.0f) (3VD)
+#define NOZZLE_PAUSE_RETRACT_LENGTH               1.0f  // (mm) (Default: 15.0f) (3VD)
 #define NOZZLE_RESUME_PURGE_LENGTH                0.0f  // (mm) (Default: 16.0f) (3VD)
-#define NOZZLE_PAUSE_X_POSITION     (X_MIN_POS + 10.0f)  // (mm) (Default: 10.0f) (3VD)
-#define NOZZLE_PAUSE_Y_POSITION     (Y_MAX_POS - 10.0f)  // (mm) (Default: 10.0f) (3VD)
+#define NOZZLE_PAUSE_X_POSITION     (X_MAX_POS - 10.0f)  // (mm) (Default: 10.0f) (3VD)
+#define NOZZLE_PAUSE_Y_POSITION     (Y_MIN_POS + 10.0f)  // (mm) (Default: 10.0f) (3VD)
 #define NOZZLE_PAUSE_Z_RAISE                      10.0f  // (mm) (Default: 10.0f)
 #define NOZZLE_PAUSE_XY_FEEDRATE                   100  // (mm/min) X and Y axes feedrate (Default: 6000) (3VD)
-#define NOZZLE_PAUSE_Z_FEEDRATE                    5  // (mm/min) Z axis feedrate (Default: 6000) (3VD)
+#define NOZZLE_PAUSE_Z_FEEDRATE                    5*60  // (mm/min) Z axis feedrate (Default: 6000) (3VD)
 #define NOZZLE_PAUSE_E_FEEDRATE                     600  // (mm/min) retract & purge feedrate (Default: 600)
 
 /**
@@ -846,7 +846,7 @@
  *
  *   Options: [Normal Disabled: 0, Normal Enabled: 1, Smart Disabled: 2, Smart Enabled: 3]
  */
-#define FIL_RUNOUT 1  // Default: 0 (3VD)
+#define FIL_RUNOUT 0  // Default: 0
 
 /**
  * Inverted Filament Runout Sensor Logic
@@ -971,7 +971,7 @@
  * period of the LCD idle time.
  *   Options: [OFF: 0, 5sec: 1, 10sec: 2, 30sec: 3, 1min: 4, 2min: 5, 5min: 6, 10min: 7]
  */
-#define LCD_IDLE_TIME 0  // Default: 0
+#define LCD_IDLE_TIME 6  // Default: 0 (3VD)
 
 // Custom value in seconds. This will be used if LCD_IDLE_TIME is set to 7 (CUSTOM Seconds)
 #define IDLE_TIME_CUSTOM (10 * 60)  // Default: 10 * 60
