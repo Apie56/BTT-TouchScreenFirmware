@@ -765,7 +765,7 @@
  * Select the type of filament runout sensor and its default enabled/disabled state.
  *   Options: [Normal Disabled: 0, Normal Enabled: 1, Smart Disabled: 2, Smart Enabled: 3]
  */
-#define FIL_RUNOUT 0  // Default: 0
+#define FIL_RUNOUT 1  // Default: 0 (3VD)
 
 /**
  * Inverted Filament Runout Sensor Logic
@@ -798,7 +798,7 @@
  *   Unit: [distance in mm]
  *   Value range: [min: 1, max: 50]
  */
-#define FIL_RUNOUT_DISTANCE 7  // Default: 7
+#define FIL_RUNOUT_DISTANCE 30  // Default: 7 (3VD)
 
 //================================================================================
 //==================== Power Loss Recovery & BTT UPS Settings ====================
