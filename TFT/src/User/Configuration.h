@@ -36,7 +36,7 @@
  *                P4: [min: 0, max: 11]
  *   Options: [OFF (port disabled): 0, 2400: 1, 9600: 2, 19200: 3, 38400: 4, 57600: 5, 115200: 6, 230400: 7, 250000: 8, 500000: 9, 921600: 10, 1000000: 11]
  */
-#define SP_1 6  // Default: 6 (3VD)
+#define SP_1 8  // Default: 6 (3VD)
 #define SP_2 0  // Default: 0
 #define SP_3 0  // Default: 0
 #define SP_4 0  // Default: 0
