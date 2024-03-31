@@ -1,7 +1,7 @@
 #ifndef _CONFIGURATION_H_
 #define _CONFIGURATION_H_
 
-#define CONFIG_VERSION 20220518
+#define CONFIG_VERSION 20240203
 
 //====================================================================================================
 //=============================== Settings Configurable On config.ini ================================
@@ -30,16 +30,93 @@
  *                P2: WIFI    (e.g. ESP3D)
  *                P3: UART 3  (e.g. OctoPrint)
  *                P4: UART 4
- *   Value range: P1: [min: 1, max: 9]
- *                P2: [min: 0, max: 9]
- *                P3: [min: 0, max: 9]
- *                P4: [min: 0, max: 9]
- *   Options: [OFF (port disabled): 0, 2400: 1, 9600: 2, 19200: 3, 38400: 4, 57600: 5, 115200: 6, 250000: 7, 500000: 8, 1000000: 9]
+ *   Value range: P1: [min: 1, max: 11]
+ *                P2: [min: 0, max: 11]
+ *                P3: [min: 0, max: 11]
+ *                P4: [min: 0, max: 11]
+ *   Options: [OFF (port disabled): 0, 2400: 1, 9600: 2, 19200: 3, 38400: 4, 57600: 5, 115200: 6, 230400: 7, 250000: 8, 500000: 9, 921600: 10, 1000000: 11]
  */
-#define SP_1 7  // Default: 6
+#define SP_1 6  // Default: 6 (3VD)
 #define SP_2 0  // Default: 0
 #define SP_3 0  // Default: 0
 #define SP_4 0  // Default: 0
+
+/**
+ * TX Slots
+ * Used/effective only in case "ADVANCED_OK" is also enabled.
+ * Maximum number of G-code TX slots used by the TFT for the communication with the printer.
+ *
+ * NOTES:
+ *   - It requires "ADVANCED_OK" to be enabled.
+ *   - This setting allows a sort of static "ADVANCED_OK" feature implementation on TFT side just in
+ *     case "ADVANCED_OK" feature is disabled in Marlin firmware. You have to set it according to the
+ *     following key requirements:
+ *     - a value not bigger than "BUFSIZE" configured in Configuration_adv.h in Marlin firmware.
+ *     - "RX_BUFFER_SIZE" properly configured in Configuration_adv.h in Marlin firmware.
+ *       To be safe you need (MAX_CMD_SIZE * BUFSIZE) RX buffer. By default this is 96 * 4 bytes so
+ *       you would need to at least set RX_BUFFER_SIZE to 512 bytes, practically half of that will
+ *       be enough, but more is better/safer.
+ *   - Typically, a value of 2 is enough to keep the printer busy most of the time while preventing
+ *     buffer overruns on RX buffer. Thus, 2 is the suggested value in case users want to use the
+ *     static ADVANCED_OK feature allowed by this setting.
+ *
+ *   Value range: [min: 2, max: 16]
+ */
+#define TX_SLOTS 2  // Default: 1
+
+/**
+ * Advanced OK
+ * If enabled:
+ * - if "ADVANCED_OK" feature is enabled in Configuration_adv.h in Marlin firmware, the TFT will use
+ *   the available G-code TX slots indication provided by the mainboard to schedule the transmission
+ *   of multiple G-codes, if any, for a maximum of the given indication.
+ * - if "ADVANCED_OK" feature is disabled in Configuration_adv.h in Marlin firmware, the TFT will
+ *   support the transmission of G-codes according to the configured "TX_SLOTS" setting.
+ * If disabled, the TFT will provide the standard transmission logic based on one G-code per time.
+ *
+ * NOTE: Disable it in case:
+ *       - no ADVANCED_OK feature is requested/needed by the user.
+ *       - ADVANCED_OK feature is not providing good printing results or if the mainboard notifies
+ *         frequent error ACK messages (e.g. unknown command) to the TFT during printing.
+ *       - COMMAND_CHECKSUM feature (see description of next setting "COMMAND_CHECKSUM") is
+ *         requested/needed by the user.
+ *
+ *   Options: [disable: 0, enable: 1]
+ */
+#define ADVANCED_OK 0  // Default: 0
+
+/**
+ * Command Checksum
+ * The TFT enriches each G-code to be sent to the mainboard adding a leading sequential line number
+ * and a trailing checksum appended after an "*" character used as separator.
+ * The checksum is based on algorithm "CheckSum8 Xor" and it is calculated on the G-code with the
+ * applied line number. E.g. "G28" is firstly enriched with a line number (e.g. "N1 G28") and finally
+ * a checksum calculated on that enriched G-code is appended (e.g. "N1 G28*18").
+ * A data integrity check (sequential line number check and checksum check) will be performed on the
+ * mainboard. In case of data mismatch (e.g. data corruption due to EMI on communication serial line):
+ * - the mainboard will send to the TFT an error ACK message followed by a "Resend: " ACK message to
+ *   ask TFT to resend the G-code with the requested line number.
+ * - the TFT will check the presence on an internal buffer of the G-code with the requested line number:
+ *   - if found, the G-code is resent for a maximum of 3 attempts.
+ *   - if not found or the maximum number of attempts has been reached, the TFT will reset the line
+ *     number with an "M110" G-code (immediately sent bypassing any other enqueued G-code) to the
+ *     requested line number just to try to avoid further retransmission requests for the same line
+ *     number or for any out of synch command already sent to the mainboard (e.g. in case ADVANCED_OK
+ *     feature is enabled in TFT).
+ *
+ * NOTE: Disable it in case:
+ *       - printing is controlled by a remote host (e.g. ESP3D, OctoPrint etc.) and a COMMAND_CHECKSUM
+ *         feature is enabled and managed by the remote host. Otherwise (COMMAND_CHECKSUM feature also
+ *         enabled in TFT), the TFT's COMMAND_CHECKSUM feature will always replace the one provided by
+ *         the remote host causing conflicts in case data mismatch will be notified by the mainboard.
+ *       - ADVANCED_OK feature is enabled in TFT. Otherwise, any out of synch command already sent to
+ *         the mainboard will be discarded by the mainboard and not resent by the TFT due the current
+ *         implementation of COMMAND_CHECKSUM feature on the TFT buffers only the last sent command
+ *         and not all the pending commands.
+ *
+ *   Options: [disable: 0, enable: 1]
+ */
+#define COMMAND_CHECKSUM 0  // Default: 0
 
 /**
  * Emulated M600
@@ -143,7 +220,7 @@
 #define STATUS_FONT_COLOR       5  // Status (e.g. volume reminder, ABL probing point etc.) font color, such as: "Card inserted", "Card removed" (Default: 5)
 #define STATUS_XYZ_BG_COLOR    15  // Background color for X Y Z position display in Status Screen menu (Default: 15)
 #define LIST_BORDER_COLOR      15  // List View border color (Default: 15)
-#define LIST_BUTTON_BG_COLOR   14  // List View button background color (Default: 15)
+#define LIST_BUTTON_BG_COLOR   15  // List View button background color (Default: 15) (3VD)
 
 // Mesh Leveling Display Colors (Mesh Editor)
 // Set the colors used for drawing the mesh with the minimum and maximum value in the grid.
@@ -170,7 +247,7 @@
  *   Options: [OFF: 0, POPUP: 1, TOAST: 2]
  *     OFF:   No notification. The message is ignored.
  *     POPUP: Display a popup window for user confirmation.
- *     TOAST: A non-blocking Toast notification is displayed for few seconds. No user interaction is needed.
+ *     TOAST: A non-blocking toast notification is displayed for few seconds. No user interaction is needed.
  */
 #define ACK_NOTIFICATION 1  // Default: 1
 
@@ -182,7 +259,7 @@
  *
  *   Options: [Date Newest First: 0, Date Oldest First: 1, Name Ascending: 2, Name Descending: 3]
  */
-#define FILES_SORT_BY 1  // Default: 0
+#define FILES_SORT_BY 0  // Default: 0
 
 /**
  * Files List Mode
@@ -197,7 +274,7 @@
  * If disabled, any filename extension starting with ".g" or ".G" (e.g. ".g", ".gco", ".gcode" etc.) will be hidden.
  *   Options: [disable: 0, enable: 1]
  */
-#define FILENAME_EXTENSION 1  // Default: 1
+#define FILENAME_EXTENSION 0  // Default: 1
 
 /**
  * Fan Speed In Percentage
@@ -268,7 +345,7 @@
  *
  *   Options: [Percentage & Elapsed time: 0, Percentage & Remaining time: 1, Elapsed time & Remaining time: 2]
  */
-#define PROG_DISP_TYPE 1  // Default: 2
+#define PROG_DISP_TYPE 2  // Default: 2 (3VD)
 
 /**
  * Current Layer Display Mode During Print
@@ -331,7 +408,7 @@
  *             ORANGE: 8, PURPLE: 9, LIME: 10, BROWN: 11, DARKBLUE: 12, DARKGREEN: 13,    GRAY: 14, DARKGRAY: 15]
  */
 #define MARLIN_BACKGROUND_COLOR 1  // Marlin Mode background color (Default: 1)
-#define MARLIN_FONT_COLOR       8  // Marlin Mode font color (Default: 0)
+#define MARLIN_FONT_COLOR       2  // Marlin Mode font color (Default: 0) (3VD)
 
 /**
  * Fullscreen Marlin Mode
@@ -429,7 +506,7 @@
  *                bed:     [min: 20, max: 400]
  *                chamber: [min: 20, max: 200]
  */
-#define MAX_TEMP {500, 275, 275, 275, 275, 275, 140, 60}  // Default: {275, 275, 275, 275, 275, 275, 150, 60}
+#define MAX_TEMP {500, 275, 275, 275, 275, 275, 140, 60}  // Default: {275, 275, 275, 275, 275, 275, 150, 60} (3VD)
 
 /**
  * Cold Extrusion Minimum Temperature
@@ -474,9 +551,9 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define SPEED_XY_SLOW   1000  // Default: 1000
-#define SPEED_XY_NORMAL 3000  // Default: 3000
-#define SPEED_XY_FAST   5000  // Default: 5000
+#define SPEED_XY_SLOW   500  // Default: 1000 (3VD)
+#define SPEED_XY_NORMAL 750  // Default: 3000 (3VD)
+#define SPEED_XY_FAST   1000  // Default: 5000 (3VD)
 
 /**
  * Z Speeds/Feedrates
@@ -485,7 +562,7 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define SPEED_Z_SLOW   500   // Default: 500
+#define SPEED_Z_SLOW   600   // Default: 500 (3VD)
 #define SPEED_Z_NORMAL 1000  // Default: 1000
 #define SPEED_Z_FAST   2000  // Default: 2000
 
@@ -496,7 +573,7 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define EXTRUDE_SLOW_SPEED     60  // Default: 60
+#define EXTRUDE_SLOW_SPEED     75  // Default: 60 (3VD)
 #define EXTRUDE_NORMAL_SPEED  600  // Default: 600
 #define EXTRUDE_FAST_SPEED   1200  // Default: 1200
 
@@ -587,13 +664,13 @@
  *   Unit: [feedrate in mm/min]
  *   Value range: [min: 10, max: 12000]
  */
-#define NOZZLE_PAUSE_RETRACT_LENGTH               1.0f  // (mm) (Default: 15.0f)
-#define NOZZLE_RESUME_PURGE_LENGTH                5.0f  // (mm) (Default: 16.0f)
-#define NOZZLE_PAUSE_X_POSITION     (X_MIN_POS + 10.0f)  // (mm) (Default: 10.0f)
-#define NOZZLE_PAUSE_Y_POSITION     (Y_MIN_POS + 10.0f)  // (mm) (Default: 10.0f)
+#define NOZZLE_PAUSE_RETRACT_LENGTH               0.0f  // (mm) (Default: 15.0f) (3VD)
+#define NOZZLE_RESUME_PURGE_LENGTH                0.0f  // (mm) (Default: 16.0f) (3VD)
+#define NOZZLE_PAUSE_X_POSITION     (X_MIN_POS + 10.0f)  // (mm) (Default: 10.0f) (3VD)
+#define NOZZLE_PAUSE_Y_POSITION     (Y_MAX_POS - 10.0f)  // (mm) (Default: 10.0f) (3VD)
 #define NOZZLE_PAUSE_Z_RAISE                      10.0f  // (mm) (Default: 10.0f)
-#define NOZZLE_PAUSE_XY_FEEDRATE                   6000  // (mm/min) X and Y axes feedrate (Default: 6000)
-#define NOZZLE_PAUSE_Z_FEEDRATE                    6000  // (mm/min) Z axis feedrate (Default: 6000)
+#define NOZZLE_PAUSE_XY_FEEDRATE                   100  // (mm/min) X and Y axes feedrate (Default: 6000) (3VD)
+#define NOZZLE_PAUSE_Z_FEEDRATE                    5  // (mm/min) Z axis feedrate (Default: 6000) (3VD)
 #define NOZZLE_PAUSE_E_FEEDRATE                     600  // (mm/min) retract & purge feedrate (Default: 600)
 
 /**
@@ -655,15 +732,15 @@
  * is moved to the XY probing point.
  * If disabled, after homing the nozzle is moved directly to the XY homing point. This is useful
  * in case Marlin firmware is configured to use the probe for Z axis homing (e.g.
- * USE_PROBE_FOR_Z_HOMING enabled in Marlin firmware) to avoid a second probing after homing.
+ * "USE_PROBE_FOR_Z_HOMING" enabled in Marlin firmware) to avoid a second probing after homing.
  *
  * NOTES:
  *   - Enable it in case Marlin firmware is not configured to use the probe for Z axis homing
- *     (e.g. USE_PROBE_FOR_Z_HOMING disabled in Marlin firmware) or the XY probing point set
+ *     (e.g. "USE_PROBE_FOR_Z_HOMING" disabled in Marlin firmware) or the XY probing point set
  *     for homing is not reachable by the nozzle (e.g. due to HW limitations/constraints or
  *     printer specific configuration).
  *   - Disable it (preferably) in case Marlin firmware is configured to use the probe for Z axis
- *     homing (e.g. USE_PROBE_FOR_Z_HOMING enabled in Marlin firmware).
+ *     homing (e.g. "USE_PROBE_FOR_Z_HOMING" enabled in Marlin firmware).
  *
  *   Options: [disable: 0, enable: 1]
  */
@@ -687,13 +764,13 @@
  * Z Steppers Auto-Alignment (ABL)
  * It allows to align multiple Z stepper motors using a bed probe by probing one position per stepper.
  * Enable this setting to show an icon in ABL menu allowing to run G34 command (it requires
- * Z_STEPPER_AUTO_ALIGN enabled in Configuration_adv.h in Marlin firmware).
+ * "Z_STEPPER_AUTO_ALIGN" enabled in Configuration_adv.h in Marlin firmware).
  *
  * NOTE: Only for Marlin printers with one stepper driver per Z stepper motor and no Z timing belt.
  *
  *   Options: [disable: 0, enable: 1]
  */
-#define Z_STEPPER_ALIGNEMENT 0  // Default: 0
+#define Z_STEPPERS_ALIGNMENT 0  // Default: 0
 
 /**
  * TouchMI Settings (ABL)
@@ -763,6 +840,10 @@
 /**
  * Filament Runout Sensor
  * Select the type of filament runout sensor and its default enabled/disabled state.
+ *
+ * NOTE: Smart Filament Sensor (SFS) (value 2 or 3) is a sensor based on an encoder disc that
+ *       toggles runout pin as filament moves (e.g. the BigTreeTech SFS).
+ *
  *   Options: [Normal Disabled: 0, Normal Enabled: 1, Smart Disabled: 2, Smart Enabled: 3]
  */
 #define FIL_RUNOUT 1  // Default: 0 (3VD)
@@ -795,6 +876,10 @@
  * Smart Filament Runout Detection
  * Used in conjunction with an SFS (Smart Filament Sensor) based on an encoder disc that
  * toggles runout pin as filament moves.
+ *
+ * NOTE: This setting is taken into account by the TFT only in case "FIL_RUNOUT" setting is
+ *       set to 2 or 3 (an SFS is used).
+ *
  *   Unit: [distance in mm]
  *   Value range: [min: 1, max: 50]
  */
@@ -857,7 +942,7 @@
  *
  * NOTE: Error messages from printer will always play the error sound.
  *
- * Parameters:
+ * Settings:
  *   touch_sound:  Enable/disable this to control touch feedback sound.
  *   toast_sound:  Enable/disable this to control all toast notification sounds.
  *   alert_sound:  Enable/disable this to control all popup and alert sounds
@@ -936,7 +1021,7 @@
  * Knob LED color at startup.
  *   Options: [OFF: 0, WHITE: 1, RED: 2, ORANGE: 3, YELLOW: 4, GREEN: 5, BLUE: 6, INDIGO: 7, VIOLET: 8]
  */
-#define KNOB_LED_COLOR 2  // Default: 1
+#define KNOB_LED_COLOR 2  // Default: 1 (3VD)
 
 // Keep the LED state in Marlin Mode
 #define KEEP_KNOB_LED_COLOR_MARLIN_MODE  // Default: uncommented (enabled)
@@ -1075,6 +1160,12 @@
  */
 
 /**
+ * Monitoring Debug
+ * Uncomment/Enable to monitor/show system resources usage in Monitoring menu.
+ */
+#define DEBUG_MONITORING  // Default: uncommented (enabled)
+
+/**
  * Generic Debug
  * Uncomment/Enable to enable arbitrary debug serial communication to SERIAL_DEBUG_PORT defined in board specific Pin_xx.h file.
  */
@@ -1204,7 +1295,7 @@
 
 /**
  * M701, M702: Marlin Filament Load / Unload G-codes Support
- * FILAMENT_LOAD_UNLOAD_GCODES option on Marlin configuration_adv.h need to be uncommented.
+ * "FILAMENT_LOAD_UNLOAD_GCODES" option in Configuration_adv.h in Marlin fw needs to be uncommented.
  * Adds a submenu to the movement menu for selecting load and unload actions.
  */
 #define LOAD_UNLOAD_M701_M702  // Default: uncommented (enabled)
